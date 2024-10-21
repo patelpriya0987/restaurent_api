@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-mongoose.connect('mongodb://127.0.0.1:27017/restaurentAPI')
+mongoose.connect('mongodb+srv://priyupatel0987:eIDTaVacSbzWccCC@api.bew3f.mongodb.net/restaurentAPI')
   .then(() => console.log('DB Connected!')).catch((err) =>{
     console.log("err",err);
   })

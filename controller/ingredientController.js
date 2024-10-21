@@ -4,8 +4,7 @@ const ingredientTypeModel = require('../models/ingredient_type/ingredientTypeMod
 
 const getingredients = async(req,res) => {
     try{
-        const ingredient = await ingredientModel.find({});
-
+        const ingredient = await ingredientModel.find({}).populate('ingredientType');
         res.status(200).json(ingredient)
     }catch(error){
         console.log(error)
@@ -29,14 +28,16 @@ const getingredient = async(req,res) => {
 
 const postingredient = async(req,res) => {
     try {
-        const {ingredientName} = req.body
+        const ingredient = await ingredientModel.findOne({_id : req.params.id}).populate('ingredientType');
+        const {ingredientName,ingredientType} = req.body
 
         if(!ingredientName){
             return res.json({'msg' : 'ingredient Name is required'})
         }
 
         const data = await ingredientModel({
-            ingredientName
+            ingredientName,
+            ingredientType
         });
 
         await data.save()
