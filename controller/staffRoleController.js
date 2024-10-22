@@ -31,7 +31,7 @@ const poststaffRole = async(req,res) => {
     try {
         const {staffRolecode, staffRoleDescription} = req.body
 
-        if(!ingredientTypeCode || !staffRoleDescription){
+        if(!staffRolecode || !staffRoleDescription){
             return res.json({'msg' : 'all fields are required'})
         }
 
@@ -65,7 +65,7 @@ const putstaffRole = async(req,res) => {
         console.log("data",data);
         
         res.status(200).json({
-            'msg' : 'Ingredient Type updated',
+            'msg' : 'staff role updated',
             data
         })
     }catch(error){
