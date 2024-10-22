@@ -1,5 +1,4 @@
-//forein keyy usage bakii
-
+// complitedd 
 const ingredientModel = require('../models/ingredient/ingredientModel')
 const menuItemModel = require('../models/menu_item/menuItemModel')
 const menuItemIngredientModel = require('../models/menu_item_ingredient/menuItemIngredientModel')
@@ -7,7 +6,7 @@ const menuItemIngredientModel = require('../models/menu_item_ingredient/menuItem
 
 const getmenuItemIngredients = async(req,res) => {
     try{
-        const menuItemIngredients = await menuItemIngredientModel.find({});
+        const menuItemIngredients = await menuItemIngredientModel.find({}).populate({path:'menuItemId',populate: {path : 'menuId', }}).populate({path:'ingredientId',populate: {path : 'ingredientType', }})
 
         res.status(200).json(menuItemIngredients)
     }catch(error){
@@ -17,7 +16,7 @@ const getmenuItemIngredients = async(req,res) => {
 }
 const getmenuItemIngredient = async(req,res) => {
     try{
-        const menuItemIngredients = await menuItemIngredientModel.findOne({_id : req.params.id});
+        const menuItemIngredients = await menuItemIngredientModel.findOne({_id : req.params.id}).populate('menuItemId').populate('ingredientId');
 
         if(!menuItemIngredients){
             return res.status(404).json({'error' : 'menu Item Ingredients are not found'})
@@ -32,14 +31,16 @@ const getmenuItemIngredient = async(req,res) => {
 
 const postmenuItemIngredient = async(req,res) => {
     try {
-        const {itemIngedientQuantitiy} = req.body
+        const {itemIngedientQuantitiy,menuItemId,ingredientId} = req.body
 
-        if(!itemIngedientQuantitiy){
+        if(!itemIngedientQuantitiy || !menuItemId || !ingredientId){
             return res.json({'msg' : 'item Ingedient Quantitiy is required'})
         }
 
         const data = await menuItemIngredientModel({
-            itemIngedientQuantitiy
+            itemIngedientQuantitiy,
+            menuItemId,
+            ingredientId
         });
 
         await data.save()
@@ -53,10 +54,12 @@ const postmenuItemIngredient = async(req,res) => {
 const putmenuItemIngredient = async(req,res) => {
     try{
 
-        const {itemIngedientQuantitiy} = req.body
+        const {itemIngedientQuantitiy,menuItemId,ingredientId} = req.body
 
         const data = await menuItemIngredientModel.findOneAndUpdate({_id : req.params.id},{
             itemIngedientQuantitiy,
+            menuItemId,
+            ingredientId
         });
 
         if(!data){

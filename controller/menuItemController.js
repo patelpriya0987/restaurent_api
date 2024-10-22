@@ -1,13 +1,12 @@
-//forein keyy usages balii
+//complited
 
-const menuModel = require('../models/menu/menuModel')
-const orderModel = require('../models/order/orderModel')
+const menuModel = require('../models/menu/menuModel');
 const menuItemModel = require('../models/menu_item/menuItemModel')
 
 
 const getmenuItems = async(req,res) => {
     try{
-        const menuItem = await menuItemModel.find({});
+        const menuItem = await menuItemModel.find({}).populate('menuId');
 
         res.status(200).json(menuItem)
     }catch(error){
@@ -17,7 +16,7 @@ const getmenuItems = async(req,res) => {
 }
 const getmenuItem = async(req,res) => {
     try{
-        const menuItem = await menuItemModel.findOne({_id : req.params.id});
+        const menuItem = await menuItemModel.findOne({_id : req.params.id}).populate('menuId');
 
         if(!menuItem){
             return res.status(404).json({'error' : 'menu Item not found'})
@@ -32,15 +31,16 @@ const getmenuItem = async(req,res) => {
 
 const postmenuItem = async(req,res) => {
     try {
-        const {menuItemDescription,menuItemPrice} = req.body
+        const {menuItemDescription,menuItemPrice , menuId} = req.body
 
-        if(!menuItemDescription || !menuItemPrice){
+        if(!menuItemDescription || !menuItemPrice || !menuId){
             return res.json({'msg' : 'all feilds are required'})
         }
 
         const data = await menuItemModel({
             menuItemDescription,
-            menuItemPrice
+            menuItemPrice,
+            menuId
         });
 
         await data.save()
@@ -54,11 +54,12 @@ const postmenuItem = async(req,res) => {
 const putmenuItem = async(req,res) => {
     try{
 
-        const {menuItemDescription,menuItemPrice} = req.body
+        const {menuItemDescription,menuItemPrice,menuId} = req.body
 
         const data = await menuItemModel.findOneAndUpdate({_id : req.params.id},{
             menuItemPrice,
-            menuItemDescription
+            menuItemDescription,
+            menuId
         });
 
         if(!data){
@@ -68,7 +69,7 @@ const putmenuItem = async(req,res) => {
         console.log("data",data);
         
         res.status(200).json({
-            'msg' : 'menu items Date updated',
+            'msg' : 'menu items  updated',
             data
         })
     }catch(error){
@@ -80,7 +81,7 @@ const putmenuItem = async(req,res) => {
 const deletemenuItem = async(req,res) => {
     try{
         const menuItems = await menuItemModel.findOneAndDelete({_id : req.params.id});
-        res.status(200).json({ 'msg' : 'menu items deleted',menuItems})
+        res.status(200).json({ 'msg' : 'menu item deleted',menuItems})
     }catch(error){
         console.log(error)
         res.status(400).json({'error' : 'something went wrong'})
