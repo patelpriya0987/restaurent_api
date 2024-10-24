@@ -1,4 +1,3 @@
-// forein keyy bakii
 
 const bookingModel = require('../models/booking/bookingModel')
 const tableModel = require('../models/table/tableModel')
@@ -6,7 +5,7 @@ const customerModel = require('../models/customer/customerModel')
 
 const getbookings = async(req,res) => {
     try{
-        const booking = await bookingModel.find({});
+        const booking = await bookingModel.find({}).populate('tableId').populate('customerId');
 
         res.status(200).json(booking)
     }catch(error){
@@ -16,15 +15,17 @@ const getbookings = async(req,res) => {
 }
 const postbooking = async(req,res) => {
     try {
-        const {dateOfBooking, numberOfMember} = req.body
+        const {dateOfBooking, numberOfMember,tableId,customerId} = req.body
 
-        if(!dateOfBooking || !numberOfMember){
+        if(!dateOfBooking || !numberOfMember || !tableId || !customerId){
             return res.json({'msg' : 'all fields are required'})
         }
 
-        const data = await productModel({
+        const data = await bookingModel({
             dateOfBooking,
-            numberOfMember
+            numberOfMember,
+            tableId,
+            customerId
         });
 
         await data.save()

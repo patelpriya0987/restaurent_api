@@ -1,4 +1,4 @@
-// complited
+
 const customerModel = require('../models/customer/customerModel')
 
 const getcustomers = async(req,res) => {

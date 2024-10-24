@@ -1,4 +1,3 @@
-// complitedd
 
 const tableModel = require('../models/table/tableModel')
 

@@ -1,4 +1,3 @@
-// complited
 
 const staffRoleModel = require('../models/staff_role/staffRoleModel')
 

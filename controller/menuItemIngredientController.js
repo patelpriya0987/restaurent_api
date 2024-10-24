@@ -1,4 +1,4 @@
-// complitedd 
+
 const ingredientModel = require('../models/ingredient/ingredientModel')
 const menuItemModel = require('../models/menu_item/menuItemModel')
 const menuItemIngredientModel = require('../models/menu_item_ingredient/menuItemIngredientModel')

@@ -1,12 +1,12 @@
-// forein key usages bakiii
 
+const path = require('path');
 const orderModel = require('../models/order/orderModel')
-const tableModel = require('../models/table/tableModel')
+const tableModel = require('../models/table/tableModel');
+const { populate } = require('dotenv');
 
 const getorders = async(req,res) => {
     try{
-        const order = await orderModel.find({});
-
+        const order = await orderModel.find({}).populate({path : 'staffId', populate :{path:'staffRole'}}).populate('tableId');
         res.status(200).json(order)
     }catch(error){
         console.log(error)
@@ -16,14 +16,18 @@ const getorders = async(req,res) => {
 
 const postorder = async(req,res) => {
     try {
-        const {orderDateTime} = req.body
+        console.log("post contoller");
+        
+        const {orderDateTime,staffId,tableId} = req.body
 
-        if(!orderDateTime){
-            return res.json({'msg' : 'orderDateTime is required'})
+        if(!orderDateTime || !staffId || !tableId){
+            return res.json({'msg' : 'all fields are required'})
         }
 
         const data = await orderModel({
-            orderDateTime
+            orderDateTime,
+            staffId,
+            tableId
         });
 
         await data.save()

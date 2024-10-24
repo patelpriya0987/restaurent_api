@@ -1,4 +1,4 @@
-// complitedd
+
 const ingredientModel = require('../models/ingredient/ingredientModel')
 const ingredientTypeModel = require('../models/ingredient_type/ingredientTypeModel')
 

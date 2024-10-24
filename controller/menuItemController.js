@@ -1,4 +1,3 @@
-//complited
 
 const menuModel = require('../models/menu/menuModel');
 const menuItemModel = require('../models/menu_item/menuItemModel')

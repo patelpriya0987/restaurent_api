@@ -1,4 +1,3 @@
-// forein key usages bakiii
 
 const staffModel = require('../models/staff/staffModel')
 const staffRoleModel = require('../models/staff_role/staffRoleModel')
@@ -6,7 +5,7 @@ const staffRoleModel = require('../models/staff_role/staffRoleModel')
 
 const getstaffs = async(req,res) => {
     try{
-        const staff = await staffModel.find({});
+        const staff = await staffModel.find({}).populate('staffRole');
 
         res.status(200).json(staff)
     }catch(error){
@@ -16,7 +15,7 @@ const getstaffs = async(req,res) => {
 }
 const getstaff = async(req,res) => {
     try{
-        const staff = await staffModel.findOne({_id : req.params.id});
+        const staff = await staffModel.findOne({_id : req.params.id}).populate('staffRole');
 
         if(!staff){
             return res.status(404).json({'error' : 'menu Item not found'})
@@ -31,15 +30,16 @@ const getstaff = async(req,res) => {
 
 const poststaff = async(req,res) => {
     try {
-        const {staff_FName,staff_LName} = req.body
+        const {staff_FName,staff_LName,staffRole} = req.body
 
-        if(!staff_FName || !staff_LName){
+        if(!staff_FName || !staff_LName || !staffRole){
             return res.json({'msg' : 'all feilds are required'})
         }
 
         const data = await staffModel({
             staff_FName,
-            staff_LName
+            staff_LName,
+            staffRole
         });
 
         await data.save()
@@ -53,11 +53,12 @@ const poststaff = async(req,res) => {
 const putstaff = async(req,res) => {
     try{
 
-        const {staff_FName,staff_LName} = req.body
+        const {staff_FName,staff_LName,staffRole} = req.body
 
         const data = await staffModel.findOneAndUpdate({_id : req.params.id},{
             staff_FName,
-            staff_LName
+            staff_LName,
+            staffRole
         });
 
         if(!data){
