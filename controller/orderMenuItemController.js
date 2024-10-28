@@ -1,10 +1,11 @@
 
 const orderMenuItemModel = require('../models/order_menu_item/orderMenuItemModel.js')
 const orderModel = require('../models/order/orderModel.js');
-const menu = require('../models/menu/menuModel.js')
+const menu = require('../models/menu/menuModel.js');
+const { populate } = require('dotenv');
 const getorderMenuItems = async(req,res) => {
     try{
-        const orderMenuItem = await orderMenuItemModel.find({}).populate('orderId').populate('menuId');
+        const orderMenuItem = await orderMenuItemModel.find({}).populate({path:'orderId' , populate : [{path:'tableId'},{path:'staffId' , populate : {path:'staffRole'}}]}).populate({path:'menuItemId' , populate : {path:'menuId'}});
         res.status(200).json(orderMenuItem)
     }catch(error){
         console.log(error)
@@ -18,7 +19,6 @@ const getorderMenuItem = async(req,res) => {
         if(!orderMenuItem){
             return res.status(404).json({'error' : 'data not found'})
         }
-
         res.status(200).json(orderMenuItem)
     }catch(error){
         console.log(error)
@@ -28,10 +28,9 @@ const getorderMenuItem = async(req,res) => {
 
 const postorderMenuItem = async(req,res) => {
     try {
-        const orderMenuItem = await orderMenuItemModel.findOne({_id : req.params.id}).populate('orderMenuItemType');
-        const {orderMenuItemQuantity,orderMenuItemComments,orderId,menuId} = req.body
+        const {orderMenuItemQuantity,orderMenuItemComments,orderId,menuItemId} = req.body
 
-        if(!orderMenuItemComments || !orderMenuItemQuantity || !orderId || !menuId){
+        if(!orderMenuItemComments || !orderMenuItemQuantity || !orderId || !menuItemId){
             return res.json({'msg' : 'all fields are required'})
         }
 
@@ -39,7 +38,7 @@ const postorderMenuItem = async(req,res) => {
             orderMenuItemComments,
             orderMenuItemQuantity,
             orderId,
-            menuId
+            menuItemId
         });
 
         await data.save()
@@ -53,13 +52,13 @@ const postorderMenuItem = async(req,res) => {
 const putorderMenuItem = async(req,res) => {
     try{
 
-        const {orderMenuItemQuantity,orderMenuItemComments,orderId,menuId} = req.body
+        const {orderMenuItemQuantity,orderMenuItemComments,orderId,menuItemId} = req.body
 
         const data = await orderMenuItemModel.findOneAndUpdate({_id : req.params.id},{
             orderMenuItemComments,
             orderMenuItemQuantity,
             orderId,
-            menuId
+            menuItemId
         });
 
         if(!data){

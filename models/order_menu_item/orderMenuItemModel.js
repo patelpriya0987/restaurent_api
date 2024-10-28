@@ -13,9 +13,9 @@ const orderMenuItemSchema = mongoose.Schema({
         type : mongoose.Schema.Types.ObjectId,
         ref: 'order'
     },
-    menuId : {
+    menuItemId : {
         type : mongoose.Schema.Types.ObjectId,
-        ref: 'menu'
+        ref: 'menuItem'
     },
 })
 
